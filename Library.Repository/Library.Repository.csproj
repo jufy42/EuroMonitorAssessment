@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library.ADT\Library.ADT.csproj" />
+    <ProjectReference Include="..\Library.Core\Library.Core.csproj" />
+    <ProjectReference Include="..\Library.DataBase\Library.DataBase.csproj" />
+    <ProjectReference Include="..\Library.DataCore\Library.DataCore.csproj" />
+    <ProjectReference Include="..\Library.Helpers\Library.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Identity.Core">
+      <HintPath>C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

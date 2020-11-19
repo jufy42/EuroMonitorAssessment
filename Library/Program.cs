@@ -1,5 +1,7 @@
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Library
 {
@@ -7,14 +9,23 @@ namespace Library
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder => {
+                    webBuilder         
+                        .UseStartup<Startup>()
+                        .ConfigureLogging((hostingContext, builder) => {
+                            builder.ClearProviders();
+                            builder.SetMinimumLevel(LogLevel.Trace);
+                            builder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                            builder.AddConsole();
+                            builder.AddDebug();
+                            builder.AddFile("Library.log");
+                        });
                 });
     }
 }

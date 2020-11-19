@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.0" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,12 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library.Core\Library.Core.csproj" />
+    <ProjectReference Include="..\Library.Injection\Library.Injection.csproj" />
+    <ProjectReference Include="..\Library.Repository\Library.Repository.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
