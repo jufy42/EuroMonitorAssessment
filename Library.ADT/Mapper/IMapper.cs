@@ -10,5 +10,7 @@ namespace Library.ADT
         SystemUser MapIdentityUser(User user);
         SystemRole GetIdentityRole(Role role);
         Role GetRole(SystemRole identityRole);
+        LibraryBook Map(Book book);
+        Book Map(LibraryBook book);
     }
 }

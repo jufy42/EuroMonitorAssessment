@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Library.ADT;
-using Library.ADT.Account;
 using Library.Core;
 using Library.Repository;
 using Library.Service;

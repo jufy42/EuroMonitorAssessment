@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Library.ADT\Library.ADT.csproj" />
     <ProjectReference Include="..\Library.Repository\Library.Repository.csproj" />
     <ProjectReference Include="..\Library.Service\Library.Service.csproj" />
   </ItemGroup>

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Library.DataCore
+namespace Library.Core
 {
-    public class Book
+    public class LibraryBook
     {
         public Guid BookID { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }
         public double PurchasePrice { get; set; }
-
-        public ICollection<UserBook> UserBooks { get; set; }
+        public bool? IsSubscribed { get; set; }
     }
 }

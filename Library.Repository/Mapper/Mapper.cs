@@ -1,4 +1,6 @@
-﻿using Library.ADT;
+﻿using System;
+using System.Net;
+using Library.ADT;
 using Library.Core;
 using Library.DataCore;
 
@@ -66,6 +68,34 @@ namespace Library.Repository
                 Id = identityRole.Id
             };
             return role;
+        }
+
+        public LibraryBook Map(Book book)
+        {
+            if (book == null)
+                return null;
+
+            return new LibraryBook
+            {
+                BookID = book.BookID,
+                Name = WebUtility.HtmlDecode(book.Name),
+                Text = WebUtility.HtmlDecode(book.Text),
+                PurchasePrice = book.PurchasePrice
+            };
+        }
+
+        public Book Map(LibraryBook book)
+        {
+            if (book == null)
+                return null;
+
+            return new Book
+            {
+                BookID = book.BookID == Guid.Empty ? Guid.NewGuid() : book.BookID,
+                Name = WebUtility.HtmlEncode(book.Name),
+                Text = WebUtility.HtmlEncode(book.Text),
+                PurchasePrice = book.PurchasePrice
+            };
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Library.Core;
 
-namespace Library.ADT.Account
+namespace Library.ADT
 {
     public interface IAccountService
     {

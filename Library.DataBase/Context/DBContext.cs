@@ -22,6 +22,7 @@ namespace Library.DataBase
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<UserBook> UserBooks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +48,7 @@ namespace Library.DataBase
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());    
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());
+            modelBuilder.ApplyConfiguration(new UserBookConfiguration());
 
             modelBuilder.Ignore<IdentityUserToken<Guid>>();
             modelBuilder.Ignore<IdentityUserClaim<Guid>>();

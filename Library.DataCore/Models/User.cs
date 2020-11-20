@@ -15,6 +15,7 @@ namespace Library.DataCore
         public bool MarkedForDeletion { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<UserBook> UserBooks { get; set; }
 
         public User()
         {
