@@ -9,6 +9,7 @@ namespace Library.DataCore
         public string Name { get; set; }
         public string Text { get; set; }
         public double PurchasePrice { get; set; }
+        public bool Active { get; set; }
 
         public ICollection<UserBook> UserBooks { get; set; }
     }

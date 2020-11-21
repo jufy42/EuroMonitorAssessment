@@ -26,6 +26,12 @@ namespace Library.DataBase
                 .HasColumnType("float")
                 .HasDefaultValue(0)
                 .IsRequired();
+
+            builder.Property(e => e.Active)
+                .HasColumnName("Active")
+                .HasColumnType("bit")
+                .HasDefaultValue(true)
+                .IsRequired();
         }
     }
 }

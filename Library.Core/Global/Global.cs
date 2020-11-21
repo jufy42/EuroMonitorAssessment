@@ -6,6 +6,6 @@
         public const string WARNING_KEY = "WarningKey";
 
         public const string ROLE_ADMINISTRATOR = "Administrator";
-        public const string ROLE_Reseller = "Reseller";
+        public const string ROLE_RESELLER = "Reseller";
     }
 }

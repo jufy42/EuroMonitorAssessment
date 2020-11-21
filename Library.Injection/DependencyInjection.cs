@@ -24,6 +24,7 @@ namespace Library.Injection
             builder.RegisterType<Mapper>().As<IMapper>();
 
             builder.RegisterType<AccountService>().As<IAccountService>();
+            builder.RegisterType<BookService>().As<IBookService>();
         }
     }
 }

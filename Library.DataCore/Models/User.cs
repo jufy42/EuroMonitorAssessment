@@ -16,6 +16,7 @@ namespace Library.DataCore
 
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<UserBook> UserBooks { get; set; }
+        public ICollection<UserToken> Tokens { get; set; }
 
         public User()
         {

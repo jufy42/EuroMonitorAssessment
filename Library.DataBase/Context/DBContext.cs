@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.DataBase
 {
-    public class DBContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>,UserRole,IdentityUserLogin<Guid>,IdentityRoleClaim<Guid>,IdentityUserToken<Guid>>
+    public class DBContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>,UserRole,IdentityUserLogin<Guid>,IdentityRoleClaim<Guid>,UserToken>
     {
         public DBContext()
         {
@@ -48,7 +48,8 @@ namespace Library.DataBase
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());    
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());
-            modelBuilder.ApplyConfiguration(new UserBookConfiguration());
+            modelBuilder.ApplyConfiguration(new UserBookConfiguration());         
+            modelBuilder.ApplyConfiguration(new UserTokenConfiguration());
 
             modelBuilder.Ignore<IdentityUserToken<Guid>>();
             modelBuilder.Ignore<IdentityUserClaim<Guid>>();

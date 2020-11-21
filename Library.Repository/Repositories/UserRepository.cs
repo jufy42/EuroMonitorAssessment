@@ -32,7 +32,7 @@ namespace Library.Repository
 
             if (user == null)
             {
-                validationResult.ValidationResourceString = "Common_Error_InvalidEmailAddressOrPassword";
+                validationResult.ValidationResourceString = "Invalid Email Address or Password";
                 validationResult.IsValid = false;
             }
 
@@ -42,12 +42,12 @@ namespace Library.Repository
 
                 if (passwordVerifiedResult != PasswordVerificationResult.Success)
                 {
-                    validationResult.ValidationResourceString = "Common_Error_InvalidEmailAddressOrPassword";
+                    validationResult.ValidationResourceString = "Invalid Email Address or Password";
                     validationResult.IsValid = false;
                 }
                 else if (user.IsLocked)
                 {
-                    validationResult.ValidationResourceString = "Common_Error_UserIsLockedOut";
+                    validationResult.ValidationResourceString = "User Is Locked Out";
                     validationResult.IsValid = false;
                 }
                 else

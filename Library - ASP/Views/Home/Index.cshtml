@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div>
+    Search on Books  <input type="text" id="txtSearch" class="textbox" /> <input type="button" class="btn" value="Search" id="cmdSearch" />
+</div>
+<br />
+<div id="BooksList">
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document)
+            .ready(function() {
+                LoadBookList();
+
+                $("#cmdSearch")
+                    .click(function () {
+                        $("#Search").val($("#txtSearch").val());
+                        LoadBookList();
+                    });
+            });
+
+        function LoadBookListScripts() {
+            $(".back")
+                .click(function () {
+                    $("#PageNo").val(parseInt($("#PageNo").val()) - 1);
+                    LoadBookList();
+                });
+
+            $(".next")
+                .click(function () {
+                    $("#PageNo").val(parseInt($("#PageNo").val()) + 1);
+                    LoadBookList();
+                });
+
+            $("#ItemsPerPage")
+                .change(function () {
+                    LoadBookList();
+                });
+        }
+
+        function LoadBookList() {
+            $("#overlayLoadGenerate").show();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("LoadBookList")',
+                data: $("#formBooks").serialize(),
+                success: function(data) {
+                    $('#BooksList').html(data);
+                    LoadBookListScripts();
+                    $("#overlayLoadGenerate").hide();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,79 @@
+﻿@using System.Globalization
+@using Library.Core
+@model Library.Core.BookList
+<form id="formBooks">
+    @Html.HiddenFor(model => model.PageNo)
+    @Html.HiddenFor(model => model.Search)
+    <table class="listtable">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Purchase Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Books)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Text
+                    </td>
+                    <td>
+                        R @Math.Round(item.PurchasePrice, 2,MidpointRounding.AwayFromZero).ToString("#0.00", CultureInfo.InvariantCulture)
+                    </td>
+                    <td>
+                        @if (User.IsInRole(Global.ROLE_ADMINISTRATOR))
+                        {
+
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.Books.Any())
+            {
+                <tr>
+                    <td colspan="10">No Books Available</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="10">
+                    <table class="paging">
+                        <tr>
+                            <td style="width: 150px;">
+                                @if (Model.PageNo > 1)
+                                {
+                                    <a href="#" class="back btn">Back</a>
+                                }
+                            </td>
+                            <td class="center">@Model.PageNo of @(Model.NoPages == 0 ? 1 : Model.NoPages) @Html.Raw("Page" + (Model.NoPages > 1 ? "s" : ""))</td>
+                            <td style="width: 150px;">
+                                @if (Model.PageNo != Model.NoPages && Model.NoPages > 0)
+                                {
+                                    <a href="#" class="next btn">Next</a>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="background: transparent; color: black;">
+                <td style="text-align: right;" colspan="10">
+                    No. items per page @Html.DropDownListFor(model => model.ItemsPerPage, new SelectList(new List<int> { 10, 20, 50 }, Model.ItemsPerPage), new { @class = "dropDown noitems" })
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>

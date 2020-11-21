@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
 using Library.Core;
@@ -88,21 +88,29 @@ namespace Library.Service
             return null;
         }
 
-        public async Task<List<LibraryBook>> GetBooks(Guid? userID)
+        public async Task<BookList> GetBooks(BookList bookList, Guid? userID)
         {
+            var newBookList = new BookList
+            {
+                ItemsPerPage = bookList.ItemsPerPage == 0 ? 20 : bookList.ItemsPerPage,
+                PageNo = bookList.PageNo == 0 ? 1 : bookList.PageNo,
+                Search = bookList.Search ?? ""
+            };
+
             try
             {
-                if (userID == null)
-                    return await _repositoryManager.BookRepository.GetAllBooks();
+                var books = userID == null ? await _repositoryManager.BookRepository.GetAllBooks() : await _repositoryManager.BookRepository.GetUserBooks(userID ?? Guid.Empty);
 
-                return await _repositoryManager.BookRepository.GetUserBooks(userID ?? Guid.Empty);
+                newBookList.Books = books.Where(p => (p.Name ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim())).ToList().OrderBy(p => p.Name).ThenBy(p => p.PurchasePrice)
+                    .Skip((newBookList.PageNo - 1) * newBookList.ItemsPerPage).Take(newBookList.ItemsPerPage).ToList();
+                newBookList.NoPages = books.Distinct().Count() / newBookList.ItemsPerPage + (books.Distinct().Count() % newBookList.ItemsPerPage > 0 ? 1 : 0);
             }
             catch (Exception e)
             {
                 _logger.LogError($"GetBooks : {e.Message}");
             }
 
-            return new List<LibraryBook>();
+            return newBookList;
         }
 
         public async Task<bool> SaveBook(LibraryBook book)
