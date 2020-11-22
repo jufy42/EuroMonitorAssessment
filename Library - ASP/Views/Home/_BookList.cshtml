@@ -4,14 +4,13 @@
 <form id="formBooks">
     @Html.HiddenFor(model => model.PageNo)
     @Html.HiddenFor(model => model.Search)
-    <table class="listtable">
+    <p><b>Number of book subscribed to : @Model.Books.Count(p => p.IsSubscribed == true)</b></p>
+    <p><b>Total Account : R @Model.Books.Where(p => p.IsSubscribed == true).Sum(p => p.PurchasePrice).ToString("#0.00",CultureInfo.InvariantCulture)</b></p>
+    <table class="listTable">
         <thead>
             <tr>
                 <th>
                     Name
-                </th>
-                <th>
-                    Title
                 </th>
                 <th>
                     Purchase Price
@@ -24,18 +23,31 @@
             {
                 <tr>
                     <td>
+                        @if (item.IsSubscribed == true)
+                        {
+                            <i class="fas fa-check-circle green"></i> 
+                        }
                         @item.Name
-                    </td>
-                    <td>
-                        @item.Text
                     </td>
                     <td>
                         R @Math.Round(item.PurchasePrice, 2,MidpointRounding.AwayFromZero).ToString("#0.00", CultureInfo.InvariantCulture)
                     </td>
                     <td>
+                        <button class="btn" title="More Information" onclick="MoreInfo('@item.Text.Replace("'","&#39;")');return false;"><i class="fas fa-info-circle"></i></button>
                         @if (User.IsInRole(Global.ROLE_ADMINISTRATOR))
                         {
 
+                        }
+                        else
+                        {
+                            @if (item.IsSubscribed == true)
+                            {
+                                <button class="btn" title="Unsubscribe" onclick="Unsubscribe('@item.BookID');return false;"><i class="fas fa-cart-arrow-down"></i></button>
+                            }
+                            else
+                            {
+                                <button class="btn" title="Subscribe" onclick="Subscribe('@item.BookID');return false;"><i class="fas fa-shopping-cart"></i></button>
+                            }
                         }
                     </td>
                 </tr>

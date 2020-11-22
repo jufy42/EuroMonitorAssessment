@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
@@ -88,6 +89,22 @@ namespace Library.Service
             return null;
         }
 
+        public async Task<List<LibraryBook>> GetBooks(Guid? userID)
+        {
+            try
+            {
+                var books = userID == null ? await _repositoryManager.BookRepository.GetAllBooks() : await _repositoryManager.BookRepository.GetUserBooks(userID ?? Guid.Empty);
+
+                return books.OrderByDescending(p => p.IsSubscribed).ThenBy(p => p.Name).ThenBy(p => p.PurchasePrice).ToList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"GetBooks : {e.Message}");
+            }
+
+            return new List<LibraryBook>();
+        }
+
         public async Task<BookList> GetBooks(BookList bookList, Guid? userID)
         {
             var newBookList = new BookList
@@ -101,7 +118,7 @@ namespace Library.Service
             {
                 var books = userID == null ? await _repositoryManager.BookRepository.GetAllBooks() : await _repositoryManager.BookRepository.GetUserBooks(userID ?? Guid.Empty);
 
-                newBookList.Books = books.Where(p => (p.Name ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim())).ToList().OrderBy(p => p.Name).ThenBy(p => p.PurchasePrice)
+                newBookList.Books = books.Where(p => (p.Name ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim())).ToList().OrderByDescending(p => p.IsSubscribed).ThenBy(p => p.Name).ThenBy(p => p.PurchasePrice)
                     .Skip((newBookList.PageNo - 1) * newBookList.ItemsPerPage).Take(newBookList.ItemsPerPage).ToList();
                 newBookList.NoPages = books.Distinct().Count() / newBookList.ItemsPerPage + (books.Distinct().Count() % newBookList.ItemsPerPage > 0 ? 1 : 0);
             }

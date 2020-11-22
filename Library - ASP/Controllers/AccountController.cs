@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
@@ -98,6 +99,57 @@ namespace Library___ASP.Controllers
         {
             _accountService.SignOutUser(_signInManager);
             return RedirectToAction("Login", "Account");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel viewModel)
+        {
+            ModelState.Remove("UserID");
+            if (!ModelState.IsValid)
+            {
+                TempData[Global.FAILURE_KEY] = string.Join("<br/>",
+                    ModelState.Values.SelectMany(v => v.Errors).Select(m => m.ErrorMessage));
+                return View(viewModel);
+            }
+
+            try
+            {
+                if (await _accountService.CheckUserName(Guid.Empty, viewModel.Email))
+                {
+                    TempData[Global.FAILURE_KEY] = "Email Address already exists, please enter in a different one.";
+                    return View(viewModel);
+                }
+
+                var success = await _accountService.RegisterUser(viewModel);
+
+                if (success)
+                {
+                    var validationString = await _accountService.SignInUser(_signInManager, new LoginViewModel
+                    {
+                        Email = viewModel.Email,
+                        Password = viewModel.Password
+                    }) ?? "";
+
+                    if (string.IsNullOrWhiteSpace(validationString))
+                    {                
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                TempData[Global.FAILURE_KEY] = "Something went wrong. Please try again or contact support";
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Create : {ex.Message}");
+                return View("Error");
+            }
         }
     }
 }

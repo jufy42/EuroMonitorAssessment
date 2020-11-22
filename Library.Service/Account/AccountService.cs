@@ -27,8 +27,8 @@ namespace Library.Service
                 var user = _mapper.Map(viewModel);
                 await _repositoryManager.UserRepository.AddUserToServer(user);
                 
-                if (viewModel.Administrator)                
-                    await _repositoryManager.UserRepository.AssignUsertoRole(Global.ROLE_ADMINISTRATOR, user.Id);
+                if (viewModel.Reseller)                
+                    await _repositoryManager.UserRepository.AssignUsertoRole(Global.ROLE_RESELLER, user.Id);
                 return true;
             }
             return false;
@@ -55,14 +55,47 @@ namespace Library.Service
             }
             catch (Exception e)
             {
-                _logger.LogError("AccountService - SignInUser : {0}", e.Message);
+                _logger.LogError($"SignInUser : {e.Message}");
                 return new ValidationResult().ValidationResourceString;
             }
+        }
+
+        public async Task<Guid?> ValidateUser(string username, string password)
+        {
+            try
+            {
+                var validationResult =  await _repositoryManager.UserRepository.ValidateUser(username, password);
+
+                if (validationResult.IsValid)
+                {
+                    var user = await _repositoryManager.UserRepository.GetUserByEmailAddress(username);
+
+                    if (user != null)
+                    {
+                        return user.Id;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"ValidateUser : {e.Message}");
+            }
+
+            return null;
         }
 
         public async Task SignOutUser(SystemSignInManager<SystemUser> signInManager)
         {
             await signInManager.SignOutAsync();
         }        
+
+        public async Task<bool> CheckUserName(Guid id, string emailAddress)
+        {
+            var emailMatch = await _repositoryManager.UserRepository.GetUserByEmailAddress(emailAddress);
+
+            if (emailMatch == null) return false;
+
+            return id != emailMatch.Id;
+        }
     }
 }

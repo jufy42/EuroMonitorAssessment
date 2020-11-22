@@ -4,3 +4,79 @@ body {
     font-family: @FontFamily;
     font-size: @FontSize;
 }
+
+.modal-header {
+    background: @Blue;
+    color: white;
+    border-radius: 0;
+    font-weight: bold;
+    font-size: 19px;
+    line-height: 24px;
+}
+
+.modal-body {
+    padding: 30px;
+    width: 100%;
+    border: none;
+}
+
+.modal-footer {
+    margin: 0 30px;
+}
+
+.modal-dialog{
+    top:25%;
+}
+
+.listTable {
+    width: 100%;
+}
+
+.listTable th {
+    border: 1px solid white;
+    color: white;
+    font-weight: bold;
+    background: @Blue;
+    padding: 10px;
+    border-top: 1px solid @Blue;
+}
+
+.listTable th:first-child {
+    border-left: 1px solid @Blue;
+}
+
+.listTable th:last-child {
+    border-right: 1px solid @Blue;
+}
+
+.listTable th.alt {
+    border: 1px solid white;
+    color: white;
+    font-weight: bold;
+    background: @DarkGrey;
+    padding: 10px;
+}
+
+.listTable > tbody {
+    max-height: 300px;
+    overflow-y: overlay;
+}
+
+.listTable > tbody td {
+    padding: 10px;
+    border: 1px solid @Blue;
+}
+
+.listTable > tbody td.alt {
+    padding: 10px;
+    border: 1px solid @DarkGrey;
+}
+
+.listTable > tbody td a {
+    color: @Blue;
+    font-weight: bold;
+}
+
+.modal-dialog {
+    max-width: 50%;;
+    }

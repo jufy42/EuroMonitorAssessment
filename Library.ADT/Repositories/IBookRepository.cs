@@ -13,6 +13,6 @@ namespace Library.ADT
         Task<bool> SaveBook(LibraryBook book);
         Task<LibraryBook> GetBookByID(Guid bookID);
         Task<List<LibraryBook>> GetUserBooks(Guid userID);
-        Task<bool> IsSubscribed(Guid userID, Guid bookID);
+        Task<bool> IsSubscribed(Guid bookID, Guid userID);
     }
 }

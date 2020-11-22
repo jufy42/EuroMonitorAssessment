@@ -42,5 +42,24 @@ namespace Library___ASP.Controllers
         {
             return PartialView("_BookList", await _bookService.GetBooks(bookList, User.IsInRole(Global.ROLE_ADMINISTRATOR) ? (Guid?)null : GetUserID));
         }
+
+        [HttpPost]
+        [Authorize(Roles = Global.ROLE_ADMINISTRATOR)]
+        public async Task<bool> SaveBook(LibraryBook book)
+        {
+            return await _bookService.SaveBook(book);
+        }
+
+        [HttpPost]
+        public async Task<string> Subscribe(Guid bookID)
+        {
+            return await _bookService.Subscribe(bookID, GetUserID);
+        }
+
+        [HttpPost]
+        public async Task<string> Unsubscribe(Guid bookID)
+        {
+            return await _bookService.UnSubscribe(bookID, GetUserID);
+        }
     }
 }

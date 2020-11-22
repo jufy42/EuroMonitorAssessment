@@ -97,7 +97,11 @@ namespace Library.Repository
                 {
                     Book dbBook = _mapper.Map(book);
 
-                    _dbContext.Books.Update(dbBook);
+                    if (await _dbContext.Books.FirstOrDefaultAsync(p => p.BookID == dbBook.BookID) == null)
+                        await _dbContext.Books.AddAsync(dbBook);
+                    else
+                        _dbContext.Books.Update(dbBook);
+
                     await _dbContext.SaveChangesAsync();
 
                     return true;
@@ -134,9 +138,16 @@ namespace Library.Repository
         {
             try
             {
-                var books = await _dbContext.Books.Join(_dbContext.UserBooks.Where(p => p.UserID == userID), b => b.BookID, u => u.BookID, (b, u) => new {b, u}).Select(p => p.b).OrderBy(p => p.Name).ToListAsync();
+                var books = await _dbContext.Books.ToListAsync();
+                var subbed = await _dbContext.UserBooks.Where(p => p.UserID == userID).ToListAsync();
 
-                return books.Select(p => _mapper.Map(p)).ToList();
+                return books.Select(p => _mapper.Map(p))
+                    .Select(p =>
+                    {
+                        p.IsSubscribed = subbed.FirstOrDefault(r => r.BookID == p.BookID) != null;
+                        return p;
+                    })
+                    .ToList();
             }
             catch (Exception e)
             {
@@ -146,7 +157,7 @@ namespace Library.Repository
             return new List<LibraryBook>();
         }
 
-        public async Task<bool> IsSubscribed(Guid userID, Guid bookID)
+        public async Task<bool> IsSubscribed(Guid bookID, Guid userID)
         {
             try
             {

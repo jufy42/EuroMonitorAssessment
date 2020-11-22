@@ -1,0 +1,49 @@
+﻿@using Library.Core
+@model Library.Core.RegisterViewModel
+@{
+    Layout = "_LoginLayout";
+}
+
+<div style="padding: 10px 25px;">
+    @using (Html.BeginForm("Register", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, true, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        if (TempData[Global.FAILURE_KEY] != null)
+        {
+            <div class="alert">
+                @TempData[Global.FAILURE_KEY]
+            </div>
+        }
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 200px;">First Name</td>
+                <td><input type="text" asp-for="Firstname" class="filter Selection" style="width: 100%;" placeholder="First Name" /></td>
+            </tr>
+            <tr>
+                <td style="width: 200px;">Last Name</td>
+                <td><input type="text" asp-for="Surname" class="filter Selection" style="width: 100%;" placeholder="Surname" /></td>
+            </tr>
+            <tr>
+                <td style="width: 200px;">Email Address</td>
+                <td><input type="email" asp-for="Email" class="filter Selection" style="width: 100%;" placeholder="Email Address" /></td>
+            </tr>
+            <tr>
+                <td style="width: 200px;">Password</td>
+                <td><input type="password" asp-for="Password" class="filter Selection" style="width: 100%;" placeholder="Password" /></td>
+            </tr>
+            <tr>
+                <td style="width: 200px;">Confirm Password</td>
+                <td><input type="password" asp-for="ConfirmPassword" class="filter Selection" style="width: 100%;" placeholder="Confirm Password" /></td>
+            </tr>
+            <tr>
+                <td style="width: 200px;">I am a reseller</td>
+                <td style="text-align: left"><input type="checkbox" asp-for="Reseller" class="filter Selection" /></td>
+            </tr>
+        </table>
+        <br />
+        <div>
+            <button type="submit" class="btn">Register</button>
+            @Html.ActionLink("Already Registered? Login", "Login", "Account", null, new { @class = "btn" })
+        </div>
+    }
+</div>

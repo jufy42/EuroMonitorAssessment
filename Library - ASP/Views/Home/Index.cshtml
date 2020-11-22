@@ -3,21 +3,143 @@
 }
 
 <div>
+    <input type="button" class="btn" data-toggle="modal" data-target="#dialog-NewBook" value="New Book"/>
+</div>
+<div>
     Search on Books  <input type="text" id="txtSearch" class="textbox" /> <input type="button" class="btn" value="Search" id="cmdSearch" />
 </div>
 <br />
 <div id="BooksList">
 </div>
 
+<div id="dialog-NewBook" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Book</h2>
+                <button type="button" class="close custom-close">×</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdBookID"/>
+                <table style="width: 100%;">
+                    <tr>
+                        <td><b>Name</b></td>
+                        <td><input type="text" class="textbox" id="txtNewName"/></td>
+                    </tr>
+                    <tr>
+                        <td><b>Description</b></td>
+                        <td><textarea id="txtNewText" class="textarea" rows="3"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><b>Purchase Price</b></td>
+                        <td><input type="number" class="textbox" id="txtNewPrice"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="AddBook();return false;">Save</button>
+                <button class="backBtn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-MoreInfo" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>More Information</h2>
+                <button type="button" class="close custom-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="divMoreInfo"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="backBtn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
     <script type="text/javascript">
+        function Subscribe(bookID) {
+            $("#overlayLoadGenerate").show();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Subscribe")',
+                data: {bookID:bookID},
+                success: function(data) {
+                    $("#overlayLoadGenerate").hide();
+                    if (data === "") {
+                        SuccessMessage("#BooksList", "Subscribed successfully");
+                        LoadBookList();
+                    } else {
+                        AlertMessage("#BooksList", data);
+                    }
+                }
+            });
+        }
+
+        function Unsubscribe(bookID) {
+            $("#overlayLoadGenerate").show();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Unsubscribe")',
+                data: {bookID:bookID},
+                success: function(data) {
+                    $("#overlayLoadGenerate").hide();
+                    if (data === "") {
+                        SuccessMessage("#BooksList", "Unsubscribed successfully");
+                        LoadBookList();
+                    } else {
+                        AlertMessage("#BooksList", data);
+                    }
+                }
+            });
+        }
+
+        function MoreInfo(info) {
+            $("#divMoreInfo").html(info);
+
+            $("#dialog-MoreInfo").modal('show');
+        }
+
+        function AddBook() {
+            if ($("#txtName").val() === "" || $("#txtNewPrice").val() === "") {
+                AlertMessage(".modal-content", "Please supply both a name and purchase price.");
+            } else {
+                var book = $("#dialog-NewBook").serializeArray();
+                book.push({ name: 'Name', value: $("#txtNewName").val() });
+                book.push({ name: 'Text', value: $("#txtNewText").val() });
+                book.push({ name: 'PurchasePrice', value: $("#txtNewPrice").val() });
+
+                $("#overlayLoadGenerate").show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveBook")',
+                    data: book,
+                    success: function(data) {
+                        $("#overlayLoadGenerate").hide();
+                        if (data === true) {
+                            SuccessMessage("#BooksList", "Book successfully saved");
+                            $("#dialog-NewBook").modal('hide');
+                            LoadBookList();
+                        } else {
+                            AlertMessage(".modal-content", "Something went wrong");
+                        }
+                    }
+                });
+            }
+        }
+
         $(document)
             .ready(function() {
                 LoadBookList();
 
                 $("#cmdSearch")
-                    .click(function () {
+                    .click(function() {
                         $("#Search").val($("#txtSearch").val());
                         LoadBookList();
                     });
@@ -25,19 +147,19 @@
 
         function LoadBookListScripts() {
             $(".back")
-                .click(function () {
+                .click(function() {
                     $("#PageNo").val(parseInt($("#PageNo").val()) - 1);
                     LoadBookList();
                 });
 
             $(".next")
-                .click(function () {
+                .click(function() {
                     $("#PageNo").val(parseInt($("#PageNo").val()) + 1);
                     LoadBookList();
                 });
 
             $("#ItemsPerPage")
-                .change(function () {
+                .change(function() {
                     LoadBookList();
                 });
         }

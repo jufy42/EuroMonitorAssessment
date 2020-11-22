@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Library.Core;
 
@@ -9,7 +10,8 @@ namespace Library.ADT
         Task<string> Subscribe(Guid bookID, Guid userID);
         Task<string> UnSubscribe(Guid bookID, Guid userID);
         Task<LibraryBook> GetBookByID(Guid bookID, Guid? userID);
-        Task<BookList> GetBooks(BookList bookList, Guid? userID);
+        Task<BookList> GetBooks(BookList bookList, Guid? userID = null);
+        Task<List<LibraryBook>> GetBooks(Guid? userID = null);
         Task<bool> SaveBook(LibraryBook book);
     }
 }
