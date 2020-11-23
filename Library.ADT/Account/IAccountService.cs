@@ -12,5 +12,7 @@ namespace Library.ADT
         Task SignOutUser(SystemSignInManager<SystemUser> signInManager);
         Task<bool> CheckUserName(Guid id, string emailAddress);
         Task<Guid?> ValidateUser(string username, string password);
+        Task<SystemUser> GetUserbyEmail(string emailAddress);
+        Task<SystemUser> GetUserbyID(Guid userID);
     }
 }

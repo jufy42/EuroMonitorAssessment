@@ -19,6 +19,21 @@ namespace Library.Service
             _logger = logger;
         }
 
+        public async Task<SystemUser> GetUserbyID(Guid userID)
+        {
+            try
+            {
+                var user = await _repositoryManager.UserRepository.GetUserById(userID);
+                return _mapper.MapIdentityUser(user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"GetUserbyID : {e.Message}");
+            }
+
+            return null;
+        }
+
         public async Task<bool> RegisterUser(RegisterViewModel viewModel)
         {
             var currentUser = await _repositoryManager.UserRepository.GetUserByEmailAddress(viewModel.Email);
@@ -96,6 +111,21 @@ namespace Library.Service
             if (emailMatch == null) return false;
 
             return id != emailMatch.Id;
+        }
+
+        public async Task<SystemUser> GetUserbyEmail(string emailAddress)
+        {
+            try
+            {
+                var user = await _repositoryManager.UserRepository.GetUserByEmailAddress(emailAddress);
+                return _mapper.MapIdentityUser(user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"GetUserbyEmail : {e.Message}");
+            }
+
+            return null;
         }
     }
 }

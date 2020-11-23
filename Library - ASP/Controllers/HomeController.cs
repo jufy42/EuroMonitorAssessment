@@ -1,7 +1,6 @@
 ﻿using System;
 using Library___ASP.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Library.ADT;
@@ -13,12 +12,10 @@ namespace Library___ASP.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IBookService _bookService;
 
-        public HomeController(ILogger<HomeController> logger, IBookService bookService)
+        public HomeController(IBookService bookService)
         {
-            _logger = logger;
             _bookService = bookService;
         }
 

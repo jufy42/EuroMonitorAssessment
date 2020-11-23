@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Library.Repository
 {
-    public class SystemRoleStore : IRoleStore<SystemRole>
+    public class SystemRoleStore : BaseClass, IRoleStore<SystemRole>
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
@@ -18,11 +18,6 @@ namespace Library.Repository
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
-        }
-
-        public void Dispose()
-        {
-            // Dummy implementation
         }
 
         public async Task<IdentityResult> CreateAsync(SystemRole role, CancellationToken cancellationToken)

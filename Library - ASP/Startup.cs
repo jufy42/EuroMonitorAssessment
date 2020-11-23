@@ -80,6 +80,8 @@ namespace Library___ASP
                 .AddConfiguration(Configuration.GetSection("Logging"))    
                 .AddFile("Library.log")
             );
+
+            services.AddSwaggerDocument();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -104,6 +106,9 @@ namespace Library___ASP
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseRouting();
 

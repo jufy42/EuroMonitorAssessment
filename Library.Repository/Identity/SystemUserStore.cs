@@ -6,26 +6,24 @@ using Library.ADT;
 using Library.Core;
 using Library.DataCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Library.Repository
 {
-    public class SystemUserStore : IUserPasswordStore<SystemUser>,
+    public class SystemUserStore : BaseClass, IUserPasswordStore<SystemUser>,
         IUserSecurityStampStore<SystemUser>,
         IUserEmailStore<SystemUser>,
         IUserRoleStore<SystemUser>
     {
-        public void Dispose()
-        {
-            //throw new NotImplementedException();
-        }
-
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public SystemUserStore(IRepositoryManager repositoryManager, IMapper mapper)
+        public SystemUserStore(IRepositoryManager repositoryManager, IMapper mapper, ILogger<SystemUserStore> logger)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<string> GetUserIdAsync(SystemUser user, CancellationToken cancellationToken)
@@ -42,19 +40,55 @@ namespace Library.Repository
             return user.UserName;
         }
 
-        public Task SetUserNameAsync(SystemUser user, string userName, CancellationToken cancellationToken)
+        public async Task SetUserNameAsync(SystemUser user, string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+
+                User aUser = _mapper.MapUser(user);
+
+                await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+                await _repositoryManager.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SetUserNameAsync : {e.Message}");
+            }
         }
 
-        public Task<string> GetNormalizedUserNameAsync(SystemUser user, CancellationToken cancellationToken)
+        public async Task<string> GetNormalizedUserNameAsync(SystemUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var dbUser = await _repositoryManager.UserRepository.GetUserById(user.Id);
+
+                return dbUser == null ? "" : user.NormalizedUserName;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"GetNormalizedUserNameAsync : {e.Message}");
+                return null;
+            }
         }
 
-        public Task SetNormalizedUserNameAsync(SystemUser user, string normalizedName, CancellationToken cancellationToken)
+        public async Task SetNormalizedUserNameAsync(SystemUser user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+
+                User aUser = _mapper.MapUser(user);
+
+                await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+                await _repositoryManager.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SetNormalizedUserNameAsync : {e.Message}");
+            }
         }
 
         public Task<IdentityResult> CreateAsync(SystemUser user, CancellationToken cancellationToken)
@@ -69,18 +103,35 @@ namespace Library.Repository
 
         public async Task<IdentityResult> UpdateAsync(SystemUser user, CancellationToken cancellationToken)
         {
-            User aUser = await _repositoryManager.UserRepository.GetUserById(user.Id);
-            aUser.Password = user.PasswordHash;
+            try
+            {
+                var aUser = _mapper.MapUser(user);
+                await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+                await _repositoryManager.SaveChangesAsync(cancellationToken);
 
-            return await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+                return IdentityResult.Success;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"UpdateAsync : {e.Message}");
+                return IdentityResult.Failed();
+            }
         }
 
         public async Task<IdentityResult> DeleteAsync(SystemUser user, CancellationToken cancellationToken)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
 
-            return await _repositoryManager.UserRepository.RemoveUserByUserId(user.Id);
+                return await _repositoryManager.UserRepository.RemoveUserByUserId(user.Id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"DeleteAsync : {e.Message}");
+                return IdentityResult.Failed();
+            }
         }
 
         public async Task<SystemUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -98,10 +149,18 @@ namespace Library.Repository
 
         public Task SetPasswordHashAsync(SystemUser user, string passwordHash, CancellationToken cancellationToken)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
 
-            user.PasswordHash = passwordHash;
+                user.PasswordHash = passwordHash;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SetPasswordHashAsync : {e.Message}");
+            }
+
             return Task.FromResult(0);
         }
 
@@ -153,9 +212,18 @@ namespace Library.Repository
             return !string.IsNullOrWhiteSpace(aUser.EmailAddress);
         }
 
-        public Task SetEmailConfirmedAsync(SystemUser user, bool confirmed, CancellationToken cancellationToken)
+        public async Task SetEmailConfirmedAsync(SystemUser user, bool confirmed, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User aUser = await _repositoryManager.UserRepository.GetUserById(user.Id);
+                aUser.EmailConfirmed = confirmed;
+                await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SetEmailConfirmedAsync : {e.Message}");
+            }
         }
 
         public async Task<SystemUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
@@ -165,24 +233,60 @@ namespace Library.Repository
             return _mapper.MapIdentityUser(user);
         }
 
-        public Task<string> GetNormalizedEmailAsync(SystemUser user, CancellationToken cancellationToken)
+        public async Task<string> GetNormalizedEmailAsync(SystemUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User aUser = await _repositoryManager.UserRepository.GetUserById(user.Id);
+                return aUser.NormalizedEmail;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"GetNormalizedEmailAsync : {e.Message}");
+                return null;
+            }
         }
 
-        public Task SetNormalizedEmailAsync(SystemUser user, string normalizedEmail, CancellationToken cancellationToken)
+        public async Task SetNormalizedEmailAsync(SystemUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User aUser = await _repositoryManager.UserRepository.GetUserById(user.Id);
+                aUser.NormalizedEmail = normalizedEmail;
+                await _repositoryManager.UserRepository.UpdateUserAsync(aUser);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SetNormalizedEmailAsync : {e.Message}");
+            }
         }
 
-        public Task AddToRoleAsync(SystemUser user, string roleName, CancellationToken cancellationToken)
+        public async Task AddToRoleAsync(SystemUser user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+                await _repositoryManager.UserRepository.AssignUsertoRole(roleName, user.Id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"AddToRoleAsync : {e.Message}");
+            }
         }
 
-        public Task RemoveFromRoleAsync(SystemUser user, string roleName, CancellationToken cancellationToken)
+        public async Task RemoveFromRoleAsync(SystemUser user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+                await _repositoryManager.UserRepository.RemoveRoleFromUser(user.Id, roleName);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"RemoveFromRoleAsync : {e.Message}");
+            }
         }
 
         public async Task<IList<string>> GetRolesAsync(SystemUser user, CancellationToken cancellationToken)

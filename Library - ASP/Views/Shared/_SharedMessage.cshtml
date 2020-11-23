@@ -1,0 +1,7 @@
+﻿@using Library.Core
+@if (TempData[Global.FAILURE_KEY] != null)
+{
+    <div class="alert">
+        @Html.Raw(TempData[Global.FAILURE_KEY])
+    </div>
+}

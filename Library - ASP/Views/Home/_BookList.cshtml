@@ -4,8 +4,11 @@
 <form id="formBooks">
     @Html.HiddenFor(model => model.PageNo)
     @Html.HiddenFor(model => model.Search)
-    <p><b>Number of book subscribed to : @Model.Books.Count(p => p.IsSubscribed == true)</b></p>
-    <p><b>Total Account : R @Model.Books.Where(p => p.IsSubscribed == true).Sum(p => p.PurchasePrice).ToString("#0.00",CultureInfo.InvariantCulture)</b></p>
+    @if (!User.IsInRole(Global.ROLE_ADMINISTRATOR))
+    {
+        <p><b>Number of book subscribed to : @Model.Books.Count(p => p.IsSubscribed == true)</b></p>
+        <p><b>Total Account : R @Model.Books.Where(p => p.IsSubscribed == true).Sum(p => p.PurchasePrice).ToString("#0.00", CultureInfo.InvariantCulture)</b></p>
+    }
     <table class="listTable">
         <thead>
             <tr>
@@ -55,7 +58,7 @@
             @if (!Model.Books.Any())
             {
                 <tr>
-                    <td colspan="10">No Books Available</td>
+                    <td colspan="10">No Books Found</td>
                 </tr>
             }
         </tbody>

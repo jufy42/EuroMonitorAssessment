@@ -1,5 +1,4 @@
-﻿@using Library.Core
-@model Library.Core.RegisterViewModel
+﻿@model Library.Core.RegisterViewModel
 @{
     Layout = "_LoginLayout";
 }
@@ -8,12 +7,7 @@
     @using (Html.BeginForm("Register", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, true, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
-        if (TempData[Global.FAILURE_KEY] != null)
-        {
-            <div class="alert">
-                @TempData[Global.FAILURE_KEY]
-            </div>
-        }
+        <partial name="_SharedMessage" />
         <table style="width: 100%;">
             <tr>
                 <td style="width: 200px;">First Name</td>
