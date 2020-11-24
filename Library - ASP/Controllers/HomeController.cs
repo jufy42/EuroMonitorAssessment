@@ -58,5 +58,16 @@ namespace Library___ASP.Controllers
         {
             return await _bookService.UnSubscribe(bookID, GetUserID);
         }
+
+        public async Task<LibraryBook> GetBook(Guid bookID)
+        {
+            return await _bookService.GetBookByID(bookID, User.IsInRole(Global.ROLE_ADMINISTRATOR) ? (Guid?)null : GetUserID);
+        }
+
+        [HttpPost]
+        public async Task<bool> RemoveBook(Guid bookID)
+        {
+            return await _bookService.RemoveBook(bookID);
+        }
     }
 }

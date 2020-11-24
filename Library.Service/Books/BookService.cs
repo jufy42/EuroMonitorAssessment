@@ -63,7 +63,7 @@ namespace Library.Service
             return "";
         }
 
-        public async Task<LibraryBook> GetBookByID(Guid bookID, Guid? userID)
+        public async Task<LibraryBook> GetBookByID(Guid bookID, Guid? userID = null)
         {
             try
             {
@@ -133,6 +133,11 @@ namespace Library.Service
         public async Task<bool> SaveBook(LibraryBook book)
         {
             return await _repositoryManager.BookRepository.SaveBook(book);
+        }
+
+        public async Task<bool> RemoveBook(Guid bookID)
+        {
+            return await _repositoryManager.BookRepository.RemoveBook(bookID);
         }
     }
 }

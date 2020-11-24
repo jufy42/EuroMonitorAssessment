@@ -15,10 +15,10 @@
                 <th>
                     Name
                 </th>
-                <th>
+                <th style="width:12%;">
                     Purchase Price
                 </th>
-                <th></th>
+                <th style="width: 18%;"></th>
             </tr>
         </thead>
         <tbody>
@@ -32,14 +32,15 @@
                         }
                         @item.Name
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         R @Math.Round(item.PurchasePrice, 2,MidpointRounding.AwayFromZero).ToString("#0.00", CultureInfo.InvariantCulture)
                     </td>
-                    <td>
-                        <button class="btn" title="More Information" onclick="MoreInfo('@item.Text.Replace("'","&#39;")');return false;"><i class="fas fa-info-circle"></i></button>
+                    <td style="text-align: center;">
+                        <button class="btn" title="More Information" onclick="MoreInfo('@item.Text.Replace("'","&#39;")','@item.Name.Replace("'","&#39;")');return false;"><i class="fas fa-info-circle"></i></button>
                         @if (User.IsInRole(Global.ROLE_ADMINISTRATOR))
                         {
-
+                            <button class="btn" onclick="OpenEdit('@item.BookID');return false;" title="Edit Book"><i class="fas fa-edit"></i></button>
+                            <button class="btn" onclick="RemoveBook('@item.BookID');return false;" title="Remove Book"><i class="fas fa-trash"></i></button>
                         }
                         else
                         {

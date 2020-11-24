@@ -14,5 +14,6 @@ namespace Library.ADT
         Task<LibraryBook> GetBookByID(Guid bookID);
         Task<List<LibraryBook>> GetUserBooks(Guid userID);
         Task<bool> IsSubscribed(Guid bookID, Guid userID);
+        Task<bool> RemoveBook(Guid bookID);
     }
 }

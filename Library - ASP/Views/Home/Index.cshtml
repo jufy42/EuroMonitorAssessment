@@ -1,10 +1,20 @@
-﻿@{
+﻿@using Library.Core
+@{
     Layout = "_Layout";
 }
 
+@if (User.IsInRole(Global.ROLE_RESELLER))
+{
 <div>
-    <input type="button" class="btn" data-toggle="modal" data-target="#dialog-NewBook" value="New Book"/>
+    <a href="@Url.Action("Index","Home",null, Url.ActionContext.HttpContext.Request.Scheme)swagger" class="btn" target="_blank">View API Calls</a>
 </div>
+}
+@if (User.IsInRole(Global.ROLE_ADMINISTRATOR))
+{
+    <div>
+        <input type="button" class="btn" data-toggle="modal" data-target="#dialog-NewBook" value="New Book"/>
+    </div>
+}
 <div>
     Search on Books  <input type="text" id="txtSearch" class="textbox" /> <input type="button" class="btn" value="Search" id="cmdSearch" />
 </div>
@@ -16,8 +26,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Book</h2>
-                <button type="button" class="close custom-close">×</button>
+                <h2 id="lblNewBookHeader">Add New Book</h2>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="hdBookID"/>
@@ -38,7 +47,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="AddBook();return false;">Save</button>
-                <button class="backBtn" data-dismiss="modal">Close</button>
+                <button class="btn" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -48,14 +57,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>More Information</h2>
-                <button type="button" class="close custom-close">×</button>
+                <h2>More Information : <label id="lblMoreInfoHeading"></label></h2>
             </div>
             <div class="modal-body">
-                <div id="divMoreInfo"></div>
+                <div id="divMoreInfo" style="text-align:justify; text-justify:inter-word;"></div>
             </div>
             <div class="modal-footer">
-                <button class="backBtn" data-dismiss="modal">Close</button>
+                <button class="btn" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -69,7 +77,7 @@
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("Subscribe")',
-                data: {bookID:bookID},
+                data: { bookID: bookID },
                 success: function(data) {
                     $("#overlayLoadGenerate").hide();
                     if (data === "") {
@@ -87,7 +95,7 @@
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("Unsubscribe")',
-                data: {bookID:bookID},
+                data: { bookID: bookID },
                 success: function(data) {
                     $("#overlayLoadGenerate").hide();
                     if (data === "") {
@@ -100,10 +108,29 @@
             });
         }
 
-        function MoreInfo(info) {
+        function MoreInfo(info, name) {
             $("#divMoreInfo").html(info);
-
+            $("#lblMoreInfoHeading").text(name);
             $("#dialog-MoreInfo").modal('show');
+        }
+
+        function OpenEdit(bookID) {
+            $("#overlayLoadGenerate").show();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetBook")',
+                data: { bookID: bookID },
+                success: function(result) {
+                    $("#overlayLoadGenerate").hide();
+                    $("#hdBookID").val(result.bookID);
+                    $("#lblNewBookHeader").text("Edit Book : " + result.name);
+                    $("#txtNewName").val(result.name);
+                    $("#txtNewText").val(result.text);
+                    $("#txtNewPrice").val(result.purchasePrice);
+
+                    $("#dialog-NewBook").modal('show');
+                }
+            });
         }
 
         function AddBook() {
@@ -111,6 +138,7 @@
                 AlertMessage(".modal-content", "Please supply both a name and purchase price.");
             } else {
                 var book = $("#dialog-NewBook").serializeArray();
+                book.push({ name: 'BookID', value: $("#hdBookID").val() });
                 book.push({ name: 'Name', value: $("#txtNewName").val() });
                 book.push({ name: 'Text', value: $("#txtNewText").val() });
                 book.push({ name: 'PurchasePrice', value: $("#txtNewPrice").val() });
@@ -132,6 +160,24 @@
                     }
                 });
             }
+        }
+
+        function RemoveBook(bookID) {
+            $("#overlayLoadGenerate").show();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("RemoveBook")',
+                data: { bookID: bookID },
+                success: function(result) {
+                    $("#overlayLoadGenerate").hide();
+                    if (result === true) {
+                        SuccessMessage("#BooksList", "Book removed successfully");
+                        LoadBookList();
+                    }else {
+                        AlertMessage("#BooksList", "Something went wrong");
+                    }
+                }
+            });
         }
 
         $(document)

@@ -3,7 +3,7 @@
     Layout = "_LoginLayout";
 }
 
-<div style="padding: 10px 25px;">
+<div style="padding: 10px 25px; width: 800px; margin: 0 auto;">
     @using (Html.BeginForm("Login", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, true, new { role = "form" }))
     {
         @Html.AntiForgeryToken()
@@ -34,11 +34,12 @@
         <div class="form-group">
             <div class="offset-md-2 col-md-10">
                 <input type="submit" value="Log in" class="btn" />
-                @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn" })
             </div>
         </div>
+        <br/><br/>
         <div class="form-group">
             <div class="offset-md-2 col-md-10">
+                @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn margin-right" })
                 @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account", null, new { @class = "btn" })
             </div>
         </div>

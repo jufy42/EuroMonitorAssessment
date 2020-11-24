@@ -14,7 +14,7 @@
     <header>
         <table style="width: 100%;">
             <tr>
-                <td><img src="@Url.Content("~/Images/1024 wide banner.jpg")" style="width: 100%;" /></td>
+                <td class="MainHeader"><h1>Once upon a time Books</h1></td>
             </tr>
             <tr>
                 <td style="text-align: right;">@await Html.PartialAsync("_LoginPartial")</td>
@@ -31,7 +31,7 @@
         @RenderBody()
     </div>
     <footer>
-        <div style="text-align: center; line-height: 45px;">&copy; @DateTime.Now.Year</div>
+        <div style="text-align: center; line-height: 45px;">&copy; @DateTime.Now.Year Rabbit Productions</div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

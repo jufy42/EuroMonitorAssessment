@@ -95,12 +95,48 @@ namespace Library.Repository
             {
                 if (book != null)
                 {
-                    Book dbBook = _mapper.Map(book);
+                    var dbBook = await _dbContext.Books.FirstOrDefaultAsync(p => p.BookID == book.BookID);
+                    if (dbBook == null)
+                    {
+                        dbBook.BookID = Guid.NewGuid();
 
-                    if (await _dbContext.Books.FirstOrDefaultAsync(p => p.BookID == dbBook.BookID) == null)
                         await _dbContext.Books.AddAsync(dbBook);
+                    }
+
+                    dbBook.Active = true;
+                    dbBook.Name = book.Name;
+                    dbBook.PurchasePrice = book.PurchasePrice;
+                    dbBook.Text = book.Text;
+
+                    await _dbContext.SaveChangesAsync();
+
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SaveBook : {e.Message}");
+            }
+
+            return false;
+        }
+
+        public async Task<bool> RemoveBook(Guid bookID)
+        {
+            try
+            {
+                var book = await _dbContext.Books.FirstOrDefaultAsync(p => p.BookID == bookID);
+
+                if (book != null)
+                {
+                    if (await _dbContext.UserBooks.AnyAsync(p => p.BookID == bookID))
+                    {
+                        book.Active = false;
+                    }
                     else
-                        _dbContext.Books.Update(dbBook);
+                    {
+                        _dbContext.Books.Remove(book);
+                    }
 
                     await _dbContext.SaveChangesAsync();
 

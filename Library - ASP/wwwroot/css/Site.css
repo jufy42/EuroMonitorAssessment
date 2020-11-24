@@ -106,3 +106,47 @@ body {
 .modal-dialog {
   max-width: 50%;
 }
+.btn {
+  background: lightblue;
+  padding: 5px 10px;
+  min-width: 50px;
+  border: 1px solid lightblue;
+  border-radius: 3px;
+}
+.btn:hover {
+  background: white;
+}
+.margin-right {
+  margin-right: 25px;
+}
+.paging {
+  width: 100%;
+}
+.paging .center {
+  width: calc(100% - 300px);
+  text-align: center;
+}
+footer {
+  min-width: 1024px;
+  margin: 0 auto;
+  font-size: 14px;
+  padding: 0;
+  width: 100%;
+  background: #022837;
+  min-height: 90px;
+  position: absolute;
+  bottom: 0;
+  color: white;
+}
+.backBtn:hover {
+  background: white;
+}
+.MainHeader {
+  text-align: center;
+  padding: 20px 0;
+  background: #022837;
+  color: white;
+}
+.nav-item {
+  padding: 0 10px;
+}

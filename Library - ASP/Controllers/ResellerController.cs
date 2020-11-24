@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
+using Library___ASP.Helpers;
 using Microsoft.Extensions.Logging;
 using static Newtonsoft.Json.JsonConvert;
 
@@ -10,6 +11,7 @@ namespace Library___ASP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [MiddlewareFilter(typeof(BasicFilter))]
     public class ResellerController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
