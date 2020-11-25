@@ -29,8 +29,8 @@ namespace Library.Repository
                 EmailAddress = identityUser.UserName,
                 Id = identityUser.Id,
                 Password = identityUser.PasswordHash,
-                LastName = string.Empty,
-                FirstName = string.Empty,
+                LastName = identityUser.LastName,
+                FirstName = identityUser.FirstName,
                 IsLocked = identityUser.LockoutEnabled
             };
             return user;
@@ -43,7 +43,9 @@ namespace Library.Repository
                 Id = user.Id,
                 PasswordHash = user.Password,
                 UserName = user.EmailAddress,
-                LockoutEnabled = user.IsLocked
+                LockoutEnabled = user.IsLocked,
+                FirstName = user.FirstName,
+                LastName = user.LastName
             };
 
             return identityUser;

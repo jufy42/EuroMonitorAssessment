@@ -9,6 +9,8 @@ namespace Library.Core
         public bool IsDeleted { get; set; }
         public bool IsDisabled { get; set; }
         public bool IsLocked { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public bool DoRememberMe { get; set; }
 

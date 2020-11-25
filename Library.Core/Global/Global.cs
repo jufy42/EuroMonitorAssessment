@@ -13,5 +13,7 @@ namespace Library.Core
         public const string IMAGE_FOLDER_NAME = "BookImageUploads";
 
         public static List<string> ImageExtensions = new List<string> {".jpeg", ".png", ".jpg", ".bmp"};
+
+        public static string CLAIM_DISPLAYNAME = "Display_Name";
     }
 }

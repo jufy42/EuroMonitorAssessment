@@ -50,6 +50,9 @@ namespace Library.Core
                 userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
 
+            if (!userPrincipal.Identities.First().HasClaim(p => p.Type == Global.CLAIM_DISPLAYNAME))
+                userPrincipal.Identities.First().AddClaim(new Claim(Global.CLAIM_DISPLAYNAME,user.FirstName + " " + user.LastName));
+
             await Context.SignInAsync(IdentityConstants.ApplicationScheme,
                 userPrincipal,
                 authenticationProperties ?? new AuthenticationProperties
