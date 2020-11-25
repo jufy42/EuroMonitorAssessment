@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using Library___ASP.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
 using Library.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Library___ASP.Controllers
 {
@@ -13,10 +18,12 @@ namespace Library___ASP.Controllers
     public class HomeController : BaseController
     {
         private readonly IBookService _bookService;
+        private readonly ILogger _logger;
 
-        public HomeController(IBookService bookService)
+        public HomeController(IBookService bookService, ILogger<HomeController> logger)
         {
             _bookService = bookService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -68,6 +75,40 @@ namespace Library___ASP.Controllers
         public async Task<bool> RemoveBook(Guid bookID)
         {
             return await _bookService.RemoveBook(bookID);
+        }
+
+        [HttpPost]
+        public async Task<string> SaveBookImage(IList<IFormFile> files)
+        {
+            try
+            {
+                if (files.Count > 0)
+                {
+                    var file = files.FirstOrDefault();
+
+                    string extension = Path.GetExtension(file.FileName);
+
+                    if (Global.ImageExtensions.Contains(extension))
+                    {
+                        var success = await _bookService.SaveBookImage(file);
+
+                        if (success)
+                            return file.FileName;
+                    }
+                    else
+                    {
+                        TempData[Global.FAILURE_KEY] = "Not an accepted image file format.";
+                        return "";    
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SaveBookImage : {e.Message}");
+            }
+
+            TempData[Global.FAILURE_KEY] = "Something went wrong";
+            return "";
         }
     }
 }

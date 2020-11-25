@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Library.Core;
+using Microsoft.AspNetCore.Http;
 
 namespace Library.ADT
 {
@@ -14,5 +15,6 @@ namespace Library.ADT
         Task<List<LibraryBook>> GetBooks(Guid? userID = null);
         Task<bool> SaveBook(LibraryBook book);
         Task<bool> RemoveBook(Guid bookID);
+        Task<bool> SaveBookImage(IFormFile file);
     }
 }

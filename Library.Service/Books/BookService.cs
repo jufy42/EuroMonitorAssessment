@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.ADT;
 using Library.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Library.Service
 {
-    public class BookService : IBookService
+    public class BookService : BaseFunctions, IBookService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILogger _logger;
@@ -138,6 +140,27 @@ namespace Library.Service
         public async Task<bool> RemoveBook(Guid bookID)
         {
             return await _repositoryManager.BookRepository.RemoveBook(bookID);
+        }
+
+        public async Task<bool> SaveBookImage(IFormFile file)
+        {
+            try
+            {
+                var path = CheckBookImageFolder();
+
+                var filePath = Path.Combine(path, file.FileName);
+
+                await using var fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"SaveBookImage : {e.Message}");
+            }
+
+            return false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Library.ADT;
 using Library.Core;
@@ -98,15 +99,19 @@ namespace Library.Repository
                     var dbBook = await _dbContext.Books.FirstOrDefaultAsync(p => p.BookID == book.BookID);
                     if (dbBook == null)
                     {
-                        dbBook.BookID = Guid.NewGuid();
+                        dbBook = new Book
+                        {
+                            BookID = Guid.NewGuid()
+                        };
 
                         await _dbContext.Books.AddAsync(dbBook);
                     }
 
                     dbBook.Active = true;
-                    dbBook.Name = book.Name;
+                    dbBook.Name = WebUtility.HtmlEncode(book.Name);
                     dbBook.PurchasePrice = book.PurchasePrice;
-                    dbBook.Text = book.Text;
+                    dbBook.Text = WebUtility.HtmlEncode(book.Text);
+                    dbBook.ImageName = WebUtility.HtmlEncode(book.ImageName);
 
                     await _dbContext.SaveChangesAsync();
 

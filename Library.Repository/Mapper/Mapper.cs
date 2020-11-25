@@ -80,7 +80,8 @@ namespace Library.Repository
                 BookID = book.BookID,
                 Name = WebUtility.HtmlDecode(book.Name),
                 Text = WebUtility.HtmlDecode(book.Text),
-                PurchasePrice = book.PurchasePrice
+                PurchasePrice = book.PurchasePrice,
+                ImageName = WebUtility.HtmlDecode(book.ImageName)
             };
         }
 

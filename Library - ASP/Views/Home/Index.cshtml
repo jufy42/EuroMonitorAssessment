@@ -43,6 +43,14 @@
                         <td><b>Purchase Price</b></td>
                         <td><input type="number" class="textbox" id="txtNewPrice"/></td>
                     </tr>
+                    <tr>
+                        <td><b>Book Image</b></td>
+                        <td>
+                            <input type="text" disabled class="passwordbox" id="txtNewBookImage"/>
+                            <input type="file" id="fuBook" style="display: none;" />
+                            <input type="button" class="actionbtn" value="Select Book Image" id="cmdBook" onclick="LoadImageDialog();"/>
+                        </td>
+                    </tr>
                 </table>
             </div>
             <div class="modal-footer">
@@ -60,10 +68,37 @@
                 <h2>More Information : <label id="lblMoreInfoHeading"></label></h2>
             </div>
             <div class="modal-body">
-                <div id="divMoreInfo" style="text-align:justify; text-justify:inter-word;"></div>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100px;">
+                            <img class="bookImageMoreInfo" id="imgMoreInfo"/>
+                        </td>
+                        <td>
+                            <div id="divMoreInfo" style="text-align: justify; text-justify: inter-word;"></div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-RemoveConfirmation" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Remove Book : <label id="lblRemoveHeading"></label></h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdRemoveBookID" />
+                Are you sure you wish to remove/deactivate <label id="lblRemoveBody"></label>?
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="RemoveBook();return false;">Yes</button>
+                <button class="btn" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
@@ -108,9 +143,10 @@
             });
         }
 
-        function MoreInfo(info, name) {
+        function MoreInfo(info, name, imageName) {
             $("#divMoreInfo").html(info);
             $("#lblMoreInfoHeading").text(name);
+            $("#imgMoreInfo").attr("src",imageName);
             $("#dialog-MoreInfo").modal('show');
         }
 
@@ -127,6 +163,7 @@
                     $("#txtNewName").val(result.name);
                     $("#txtNewText").val(result.text);
                     $("#txtNewPrice").val(result.purchasePrice);
+                    $("#txtNewBookImage").val(result.ImageName);
 
                     $("#dialog-NewBook").modal('show');
                 }
@@ -142,6 +179,7 @@
                 book.push({ name: 'Name', value: $("#txtNewName").val() });
                 book.push({ name: 'Text', value: $("#txtNewText").val() });
                 book.push({ name: 'PurchasePrice', value: $("#txtNewPrice").val() });
+                book.push({ name: 'ImageName', value: $("#txtNewBookImage").val() });
 
                 $("#overlayLoadGenerate").show();
                 $.ajax({
@@ -162,19 +200,27 @@
             }
         }
 
-        function RemoveBook(bookID) {
+        function OpenRemove(bookID, name) {
+            $("#hdRemoveBookID").val(bookID);
+            $("#lblRemoveHeading").text(name);
+            $("#lblRemoveBody").text(name);
+            $("#dialog-RemoveConfirmation").modal('show');
+        }
+
+        function RemoveBook() {
             $("#overlayLoadGenerate").show();
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("RemoveBook")',
-                data: { bookID: bookID },
+                data: { bookID: $("#hdRemoveBookID").val() },
                 success: function(result) {
                     $("#overlayLoadGenerate").hide();
                     if (result === true) {
+                        $("#dialog-RemoveConfirmation").modal('hide');
                         SuccessMessage("#BooksList", "Book removed successfully");
                         LoadBookList();
-                    }else {
-                        AlertMessage("#BooksList", "Something went wrong");
+                    } else {
+                        AlertMessage(".modal-content", "Something went wrong");
                     }
                 }
             });
@@ -188,6 +234,34 @@
                     .click(function() {
                         $("#Search").val($("#txtSearch").val());
                         LoadBookList();
+                    });
+
+                $("#fuBook")
+                    .change(function() {
+                        if (window.FormData !== undefined) {
+                            var fileUpload = $(this).get(0).files;
+
+                            var fileData = new FormData();
+                            fileData.append("files", fileUpload[0]);
+
+                            $.ajax({
+                                url: '@Url.Action("SaveBookImage")',
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                data: fileData,
+                                success: function(result) {
+                                    if (result === "") {
+                                        AlertMessage(".modal-content", @TempData[Global.FAILURE_KEY]);
+                                    } else {
+                                        $("#txtNewBookImage").val(result);
+                                        SuccessMessage(".modal-content", "Image successfully saved");
+                                    }
+                                }
+                            });
+                        } else {
+                            AlertMessage(".modal-content", "FormData is not supported.");
+                        }
                     });
             });
 
@@ -222,6 +296,10 @@
                     $("#overlayLoadGenerate").hide();
                 }
             });
+        }
+
+        function LoadImageDialog() {
+            $("#fuBook").click();
         }
     </script>
 }

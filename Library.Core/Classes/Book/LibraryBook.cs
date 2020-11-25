@@ -9,5 +9,6 @@ namespace Library.Core
         public string Text { get; set; }
         public double PurchasePrice { get; set; }
         public bool? IsSubscribed { get; set; }
+        public string ImageName { get; set; }
     }
 }

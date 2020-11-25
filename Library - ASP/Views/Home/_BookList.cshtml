@@ -26,21 +26,22 @@
             {
                 <tr>
                     <td>
+                        <img src='@Url.Content(string.IsNullOrWhiteSpace(item.ImageName) ? "~/images/nc-sm.gif" : $"~/{Global.IMAGE_FOLDER_NAME}/{item.ImageName}")' class="bookImage" />
                         @if (item.IsSubscribed == true)
                         {
-                            <i class="fas fa-check-circle green"></i> 
+                            <i class="fas fa-check-circle green"></i>
                         }
                         @item.Name
                     </td>
                     <td style="text-align: right;">
-                        R @Math.Round(item.PurchasePrice, 2,MidpointRounding.AwayFromZero).ToString("#0.00", CultureInfo.InvariantCulture)
+                        R @Math.Round(item.PurchasePrice, 2, MidpointRounding.AwayFromZero).ToString("#0.00", CultureInfo.InvariantCulture)
                     </td>
                     <td style="text-align: center;">
-                        <button class="btn" title="More Information" onclick="MoreInfo('@item.Text.Replace("'","&#39;")','@item.Name.Replace("'","&#39;")');return false;"><i class="fas fa-info-circle"></i></button>
+                        <button class="btn" title="More Information" onclick="MoreInfo('@item.Text.Replace("'", "&#39;")', '@item.Name.Replace("'", "&#39;")', '@Url.Content(string.IsNullOrWhiteSpace(item.ImageName) ? "~/images/nc-sm.gif" : $"~/{Global.IMAGE_FOLDER_NAME}/{item.ImageName}")');return false;"><i class="fas fa-info-circle"></i></button>
                         @if (User.IsInRole(Global.ROLE_ADMINISTRATOR))
                         {
                             <button class="btn" onclick="OpenEdit('@item.BookID');return false;" title="Edit Book"><i class="fas fa-edit"></i></button>
-                            <button class="btn" onclick="RemoveBook('@item.BookID');return false;" title="Remove Book"><i class="fas fa-trash"></i></button>
+                            <button class="btn" onclick="OpenRemove('@item.BookID', '@item.Name.Replace("'", "&#39;")');return false;" title="Remove Book"><i class="fas fa-trash"></i></button>
                         }
                         else
                         {
@@ -87,7 +88,7 @@
             </tr>
             <tr style="background: transparent; color: black;">
                 <td style="text-align: right;" colspan="10">
-                    No. items per page @Html.DropDownListFor(model => model.ItemsPerPage, new SelectList(new List<int> { 10, 20, 50 }, Model.ItemsPerPage), new { @class = "dropDown noitems" })
+                    No. items per page @Html.DropDownListFor(model => model.ItemsPerPage, new SelectList(new List<int> { 10, 20, 50 }, Model.ItemsPerPage), new { @class = "ddl" })
                 </td>
             </tr>
         </tfoot>

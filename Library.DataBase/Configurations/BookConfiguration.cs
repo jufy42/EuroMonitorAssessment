@@ -27,6 +27,10 @@ namespace Library.DataBase
                 .HasDefaultValue(0)
                 .IsRequired();
 
+            builder.Property(e => e.ImageName)
+                .HasColumnName("ImageName")
+                .HasColumnType("nvarchar(1000)");
+
             builder.Property(e => e.Active)
                 .HasColumnName("Active")
                 .HasColumnType("bit")
