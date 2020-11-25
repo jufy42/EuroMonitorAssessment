@@ -14,5 +14,6 @@ namespace Library.ADT
         Task<Guid?> ValidateUser(string username, string password);
         Task<SystemUser> GetUserbyEmail(string emailAddress);
         Task<SystemUser> GetUserbyID(Guid userID);
+        Task<bool> IsReseller(Guid userID);
     }
 }

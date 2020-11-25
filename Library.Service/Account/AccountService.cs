@@ -19,6 +19,22 @@ namespace Library.Service
             _logger = logger;
         }
 
+        public async Task<bool> IsReseller(Guid userID)
+        {
+            try
+            {
+                var roles = await _repositoryManager.UserRepository.GetUserRolesAsync(userID);
+
+                return roles.Contains(Global.ROLE_ADMINISTRATOR) || roles.Contains(Global.ROLE_RESELLER);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"IsReseller : {e.Message}");
+            }
+
+            return false;
+        }
+
         public async Task<SystemUser> GetUserbyID(Guid userID)
         {
             try

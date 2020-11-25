@@ -32,9 +32,18 @@ namespace Library___ASP.Helpers
                 var password = usernamePassword.Substring(seperatorIndex + 1);
 
                 var verification = await _accountService.ValidateUser(username, password);
-                if (verification == null)
+                if (verification != null)
                 {
-                    await _next.Invoke(context);
+                    var isReseller = await _accountService.IsReseller(verification.Value);
+
+                    if (isReseller)
+                    {
+                        await _next.Invoke(context);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 401;
+                    }
                 }
                 else
                 {
