@@ -31,6 +31,10 @@ namespace Library.DataBase
                 .HasColumnName("ImageName")
                 .HasColumnType("nvarchar(1000)");
 
+            builder.Property(e => e.Author)
+                .HasColumnName("Author")
+                .HasColumnType("nvarchar(250)");
+
             builder.Property(e => e.Active)
                 .HasColumnName("Active")
                 .HasColumnType("bit")

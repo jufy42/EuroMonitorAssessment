@@ -120,7 +120,7 @@ namespace Library.Service
             {
                 var books = userID == null ? await _repositoryManager.BookRepository.GetAllBooks() : await _repositoryManager.BookRepository.GetUserBooks(userID ?? Guid.Empty);
 
-                newBookList.Books = books.Where(p => (p.Name ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim())).ToList().OrderByDescending(p => p.IsSubscribed).ThenBy(p => p.Name).ThenBy(p => p.PurchasePrice)
+                newBookList.Books = books.Where(p => (p.Name ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim()) || (p.Author ?? "").ToLower().Contains((newBookList.Search ?? "").ToLower().Trim())).ToList().OrderByDescending(p => p.IsSubscribed).ThenBy(p => p.Name).ThenBy(p => p.PurchasePrice)
                     .Skip((newBookList.PageNo - 1) * newBookList.ItemsPerPage).Take(newBookList.ItemsPerPage).ToList();
                 newBookList.NoPages = books.Distinct().Count() / newBookList.ItemsPerPage + (books.Distinct().Count() % newBookList.ItemsPerPage > 0 ? 1 : 0);
             }

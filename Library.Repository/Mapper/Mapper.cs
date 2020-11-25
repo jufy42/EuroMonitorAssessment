@@ -81,7 +81,8 @@ namespace Library.Repository
                 Name = WebUtility.HtmlDecode(book.Name),
                 Text = WebUtility.HtmlDecode(book.Text),
                 PurchasePrice = book.PurchasePrice,
-                ImageName = WebUtility.HtmlDecode(book.ImageName)
+                ImageName = WebUtility.HtmlDecode(book.ImageName),
+                Author = WebUtility.HtmlDecode(book.Author)
             };
         }
 
@@ -95,7 +96,9 @@ namespace Library.Repository
                 BookID = book.BookID == Guid.Empty ? Guid.NewGuid() : book.BookID,
                 Name = WebUtility.HtmlEncode(book.Name),
                 Text = WebUtility.HtmlEncode(book.Text),
-                PurchasePrice = book.PurchasePrice
+                PurchasePrice = book.PurchasePrice,
+                ImageName = WebUtility.HtmlDecode(book.ImageName),
+                Author = WebUtility.HtmlDecode(book.Author)
             };
         }
     }

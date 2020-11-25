@@ -10,5 +10,6 @@ namespace Library.Core
         public double PurchasePrice { get; set; }
         public bool? IsSubscribed { get; set; }
         public string ImageName { get; set; }
+        public string Author { get; set; }
     }
 }

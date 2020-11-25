@@ -33,7 +33,11 @@
                 <table style="width: 100%;">
                     <tr>
                         <td><b>Name</b></td>
-                        <td><input type="text" class="textbox" id="txtNewName"/></td>
+                        <td><input type="text" class="textbox" id="txtNewName" /></td>
+                    </tr>
+                    <tr>
+                        <td><b>Author</b></td>
+                        <td><input type="text" id="txtNewAuthor" class="textbox" /></td>
                     </tr>
                     <tr>
                         <td><b>Description</b></td>
@@ -41,14 +45,14 @@
                     </tr>
                     <tr>
                         <td><b>Purchase Price</b></td>
-                        <td><input type="number" class="textbox" id="txtNewPrice"/></td>
+                        <td><input type="number" class="textbox" id="txtNewPrice" /></td>
                     </tr>
                     <tr>
                         <td><b>Book Image</b></td>
                         <td>
-                            <input type="text" disabled class="passwordbox" id="txtNewBookImage"/>
+                            <input type="text" disabled class="passwordbox" id="txtNewBookImage" />
                             <input type="file" id="fuBook" style="display: none;" />
-                            <input type="button" class="actionbtn" value="Select Book Image" id="cmdBook" onclick="LoadImageDialog();"/>
+                            <input type="button" class="actionbtn" value="Select Book Image" id="cmdBook" onclick="LoadImageDialog();" />
                         </td>
                     </tr>
                 </table>
@@ -73,7 +77,7 @@
                         <td style="width: 100px;">
                             <img class="bookImageMoreInfo" id="imgMoreInfo"/>
                         </td>
-                        <td>
+                        <td style="vertical-align: top;">
                             <div id="divMoreInfo" style="text-align: justify; text-justify: inter-word;"></div>
                         </td>
                     </tr>
@@ -164,6 +168,7 @@
                     $("#txtNewText").val(result.text);
                     $("#txtNewPrice").val(result.purchasePrice);
                     $("#txtNewBookImage").val(result.imageName);
+                    $("#txtNewAuthor").val(result.author);
 
                     $("#dialog-NewBook").modal('show');
                 }
@@ -180,6 +185,7 @@
                 book.push({ name: 'Text', value: $("#txtNewText").val() });
                 book.push({ name: 'PurchasePrice', value: $("#txtNewPrice").val() });
                 book.push({ name: 'ImageName', value: $("#txtNewBookImage").val() });
+                book.push({ name: 'Author', value: $("#txtNewAuthor").val() });
 
                 $("#overlayLoadGenerate").show();
                 $.ajax({

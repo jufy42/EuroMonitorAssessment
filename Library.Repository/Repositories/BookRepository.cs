@@ -112,6 +112,7 @@ namespace Library.Repository
                     dbBook.PurchasePrice = book.PurchasePrice;
                     dbBook.Text = WebUtility.HtmlEncode(book.Text);
                     dbBook.ImageName = WebUtility.HtmlEncode(book.ImageName);
+                    dbBook.Author = WebUtility.HtmlEncode(book.Author);
 
                     await _dbContext.SaveChangesAsync();
 
