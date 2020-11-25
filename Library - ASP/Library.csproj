@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\BookImageUploads\**" />
+    <Content Remove="wwwroot\BookImageUploads\**" />
+    <EmbeddedResource Remove="wwwroot\BookImageUploads\**" />
+    <None Remove="wwwroot\BookImageUploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
