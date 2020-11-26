@@ -93,12 +93,11 @@ namespace Library___ASP.Controllers
                         var success = await _bookService.SaveBookImage(file);
 
                         if (success)
-                            return file.FileName;
+                            return "";
                     }
                     else
                     {
-                        TempData[Global.FAILURE_KEY] = "Not an accepted image file format.";
-                        return "";    
+                        return "Not an accepted image file format.";    
                     }
                 }
             }
@@ -107,8 +106,7 @@ namespace Library___ASP.Controllers
                 _logger.LogError($"SaveBookImage : {e.Message}");
             }
 
-            TempData[Global.FAILURE_KEY] = "Something went wrong";
-            return "";
+            return "Something went wrong";
         }
     }
 }

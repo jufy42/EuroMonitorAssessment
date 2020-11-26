@@ -257,10 +257,10 @@
                                 processData: false,
                                 data: fileData,
                                 success: function(result) {
-                                    if (result === "") {
-                                        AlertMessage(".modal-content", @TempData[Global.FAILURE_KEY]);
+                                    if (result !== "") {
+                                        AlertMessage(".modal-content", result);
                                     } else {
-                                        $("#txtNewBookImage").val(result);
+                                        $("#txtNewBookImage").val(fileUpload[0].name);
                                         SuccessMessage(".modal-content", "Image successfully saved");
                                     }
                                 }
